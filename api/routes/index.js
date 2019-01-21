@@ -9,7 +9,7 @@ router.get('/timetable', (req, res) => {
   res.send('Here is your timetable!')
 })
 
-router.get('/checking', (req, res) => {
+router.get('/registration', (req, res) => {
   res.json({
     "Check" : "The application works"
   })
