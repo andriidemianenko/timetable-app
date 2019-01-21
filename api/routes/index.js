@@ -5,6 +5,10 @@ router.get('/', (req, res) => {
   res.send('Welcome on a homepage')
 })
 
+router.get('/timetable', (req, res) => {
+  res.send('Here is your timetable!')
+})
+
 router.get('/checking', (req, res) => {
   res.json({
     "Check" : "The application works"
