@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-// const bcrypt = require('bcrypt-nodejs');
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
 
 const User = require('../models/User');
 const salt = 'someSaltString'
@@ -22,17 +22,35 @@ router.get('/timetable', (req, res) => {
 })
 
 router.post('/signup', async (req, res) => {
-  console.log(req.body, 'request')
   const password = sha512(req.body.password)
   const user = new User({
     email: req.body.email,
     password
   })
   await user.save()
-  console.log('after await')
   res.status(200).json({
     success: "You've successfully signen up!"
   }).end()
+})
+
+router.post('/signin', async (req, res) => {
+  const incPassword = sha512(req.body.password)
+  let user = await User.findOne({ email: req.body.email })
+  if (user) {
+    if (user.password === incPassword) {
+      res.status(200).json({
+        success: "You've successfully logged in!"
+      })
+    } else {
+      res.status(401).json({
+        error: "Invalid login or password!"
+      })
+    }
+  } else {
+    res.status(401).json({
+      error: "Invalid login or password!"
+    })
+  }
 })
 
 module.exports = router

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export default class Login extends Component {
   constructor() {
@@ -15,12 +16,21 @@ export default class Login extends Component {
   }
   handleSubmit = event => {
     event.preventDefault()
+    this.signIn()
   }
   validateForm() {
     return this.state.email.length > 0 && this.state.password.length > 0
   }
-  login() {
+  signIn() {
     let userData = JSON.stringify(this.state)
+    axios({
+      url: 'http://localhost:5000/api/signin', 
+      method: 'POST',
+      data: userData,
+      headers: {
+        'Content-type': 'application/json'
+      }
+    })
   }
   render() {
     return (
