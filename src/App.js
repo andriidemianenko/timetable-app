@@ -14,7 +14,6 @@ class App extends Component {
           <ul>
             <li><Link to="/">Login</Link></li>
             <li><Link to="/registration">Registration</Link></li>
-            <li><Link to="/timetable">Timetable</Link></li>
           </ul>
           <Route path="/" exact component={Login} />
           <Route path="/registration" component={Registration} />

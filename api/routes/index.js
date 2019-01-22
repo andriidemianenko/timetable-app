@@ -4,6 +4,8 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 
 const User = require('../models/User');
+const Timetable = require('../models/Timetable')
+
 const salt = 'someSaltString'
 const secret = 'secret'
 
