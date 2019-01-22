@@ -31,7 +31,7 @@ router.post('/signup', async (req, res) => {
   })
   await user.save()
   res.status(200).json({
-    success: "You've successfully signen up!",
+    success: "You've successfully signed up! You can signin now!",
   }).end()
 })
 

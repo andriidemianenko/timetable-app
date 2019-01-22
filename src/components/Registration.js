@@ -6,7 +6,8 @@ export default class Registration extends Component {
     super();
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      message: ''
     }
   }
   handleChange = event => {
@@ -32,7 +33,8 @@ export default class Registration extends Component {
       }
     })
     .then(res => {
-      this.props.history.push('/timetable')
+      console.log(res)
+      this.setState({ message: res.data.success })
     })
     .catch(err => {
       console.log(`Something went wrong! ${err}`)
@@ -48,6 +50,7 @@ export default class Registration extends Component {
           <input type="text" id="password" value={this.state.password} onChange={this.handleChange} required/>
           <button type="submit" disabled={!this.validateForm()}>Sign Up</button>
         </form>
+        <h1>{this.state.message}</h1>
       </div>
     );
   }
