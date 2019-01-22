@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export default class Registration extends Component {
   constructor() {
     super();
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      message: ''
     }
   }
   handleChange = event => {
@@ -15,12 +17,28 @@ export default class Registration extends Component {
   }
   handleSubmit = event => {
     event.preventDefault()
+    this.signup()
   }
   validateForm() {
     return this.state.email.length > 0 && this.state.password.length > 0
   }
-  login() {
-    let userData = JSON.stringify(this.state)
+  signup() {
+    const userData  = JSON.stringify(this.state)
+    axios({
+      url: 'http://localhost:5000/api/signup', 
+      data: userData,
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      }
+    })
+    .then(res => {
+      console.log(res)
+      this.setState({ message: res.data.success })
+    })
+    .catch(err => {
+      console.log(`Something went wrong! ${err}`)
+    })
   }
   render() {
     return (
@@ -30,8 +48,9 @@ export default class Registration extends Component {
           <input type="email" id="email" value={this.state.email} onChange={this.handleChange} required/>
           <label>Password:</label>
           <input type="text" id="password" value={this.state.password} onChange={this.handleChange} required/>
-          <button type="submit" disabled={!this.validateForm()}>Login</button>
+          <button type="submit" disabled={!this.validateForm()}>Sign Up</button>
         </form>
+        <h1>{this.state.message}</h1>
       </div>
     );
   }
