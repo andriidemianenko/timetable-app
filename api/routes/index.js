@@ -18,8 +18,9 @@ router.get('/', (req, res) => {
   res.send('Welcome on a homepage')
 })
 
-router.get('/:userId/timetable', (req, res) => {
-  res.send(`Welcome user ${req.params.id}`)
+router.get('/timetable/user/:userId', (req, res) => {
+  console.log(req.params.userId)
+  res.send(`Welcome user ${req.params.userId}!`)
 })
 
 router.post('/signup', async (req, res) => {
@@ -45,7 +46,7 @@ router.post('/signin', async (req, res) => {
         },
         secret,
         {
-          expiresIn: '1m'
+          expiresIn: '3m'
         })
         return res.status(200).json({
           success: 'Welcome to the JWT Auth',

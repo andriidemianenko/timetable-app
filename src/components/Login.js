@@ -32,9 +32,10 @@ export default class Login extends Component {
       }
     })
     .then(res => {
-      console.log(res.data)
       localStorage.setItem('auth_token', res.data.token)
       localStorage.setItem('_id', res.data.id)
+      const userId = localStorage.getItem('_id')
+      this.props.history.push(`/timetable/user/${userId}`)
     })
     .catch(err => {
       console.log(err)

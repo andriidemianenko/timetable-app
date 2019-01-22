@@ -9,25 +9,24 @@ export default class Timetable extends Component {
       status: ''
     }
   }
+  getUserId() { return localStorage.getItem('_id')}
+  getToken() { return localStorage.getItem('auth_token') }
   fetchTable() {
-    axios.get('http://localhost:5000/api/timetable')
-      .then(res => {
-          this.setState({ message: res.data })
-        }
-      )
     axios({
       url: 'http://localhost:5000/api/auth',
       method: 'POST',
-      data: { token: localStorage.getItem('auth_token') },
+      data: { token: this.getToken() },
       headers: {
         'Content-type': 'application/json'
-      },
-      params: {
-        userId: localStorage.getItem('_id')
       }
     })
     .then(res => {
       this.setState({ status: res.data.status })
+      axios({
+        url: `http://localhost:5000/api/timetable/user/${this.getUserId()}`,
+        method: 'GET'
+      })
+      .then(res => this.setState({ message: res.data }))
     })
     .catch(err => {
       this.setState({ status: 'Your token is expired!' })
@@ -37,6 +36,7 @@ export default class Timetable extends Component {
     return (
       <div>
         <h1>{this.state.status}</h1>
+        <h2>{this.state.message}</h2>
       </div>
     );
   }
