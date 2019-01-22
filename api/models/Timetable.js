@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const Events = require('./Events')
 
 mongoose.connect('mongodb://localhost:27017/timetable-express-app')
 const Timetable = mongoose.Schema({
@@ -7,7 +6,7 @@ const Timetable = mongoose.Schema({
     type: String,
     required: true
   },
-  events: [Events]
+  events: [{ startedAt: Number, duration: Number, title: String }]
 })
 
 module.exports = mongoose.model('Timetable', Timetable)
