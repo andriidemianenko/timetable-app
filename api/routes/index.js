@@ -38,9 +38,18 @@ router.post('/signin', async (req, res) => {
   let user = await User.findOne({ email: req.body.email })
   if (user) {
     if (user.password === incPassword) {
-      res.status(200).json({
-        success: "You've successfully logged in!"
-      })
+      const JWTToken = jwt.sign({
+          email: user.email,
+          _id: user._id
+        },
+        'secret',
+        {
+          expiresIn: '20m'
+        })
+        return res.status(200).json({
+          success: 'Welcome to the JWT Auth',
+          token: JWTToken
+        })
     } else {
       res.status(401).json({
         error: "Invalid login or password!"
