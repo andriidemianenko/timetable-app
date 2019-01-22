@@ -31,6 +31,15 @@ export default class Login extends Component {
         'Content-type': 'application/json'
       }
     })
+    .then(res => {
+      localStorage.setItem('auth_token', res.data.token)
+      localStorage.setItem('_id', res.data.id)
+      const userId = localStorage.getItem('_id')
+      this.props.history.push(`/timetable/user/${userId}`)
+    })
+    .catch(err => {
+      console.log(err)
+    })
   }
   render() {
     return (

@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 
 const User = require('../models/User');
 const salt = 'someSaltString'
+const secret = 'secret'
 
 const sha512 = password => {
   const hash = crypto.createHmac('sha512', salt)
@@ -17,8 +18,9 @@ router.get('/', (req, res) => {
   res.send('Welcome on a homepage')
 })
 
-router.get('/timetable', (req, res) => {
-  res.send('Here is your timetable!')
+router.get('/timetable/user/:userId', (req, res) => {
+  console.log(req.params.userId)
+  res.send(`Welcome user ${req.params.userId}!`)
 })
 
 router.post('/signup', async (req, res) => {
@@ -29,7 +31,7 @@ router.post('/signup', async (req, res) => {
   })
   await user.save()
   res.status(200).json({
-    success: "You've successfully signen up!"
+    success: "You've successfully signed up! You can signin now!",
   }).end()
 })
 
@@ -38,19 +40,48 @@ router.post('/signin', async (req, res) => {
   let user = await User.findOne({ email: req.body.email })
   if (user) {
     if (user.password === incPassword) {
-      res.status(200).json({
-        success: "You've successfully logged in!"
-      })
+      const JWTToken = jwt.sign({
+          email: user.email,
+          _id: user._id
+        },
+        secret,
+        {
+          expiresIn: '3m'
+        })
+        return res.status(200).json({
+          success: 'Welcome to the JWT Auth',
+          token: JWTToken,
+          id: user._id
+        })
     } else {
       res.status(401).json({
-        error: "Invalid login or password!"
+        error: 'Invalid login or password!'
       })
     }
   } else {
     res.status(401).json({
-      error: "Invalid login or password!"
+      error: 'Invalid login or password!'
     })
   }
 })
 
+router.post('/auth', async (req, res) => {
+  const token = req.body.token
+  if (!token) {
+    res.status(401).json({
+      status: 'You are not logged in!'
+    })
+  } else {
+    try {
+      await jwt.verify(token, secret)
+      res.status(200).json({
+        status: 'You are authorized!'
+      })
+    } catch(error) {
+      res.status(401).json({
+        status: 'Invalid auth token!'
+      })
+    }
+  }
+})
 module.exports = router

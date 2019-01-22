@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb://localhost:27017/register-app')
+mongoose.connect('mongodb://localhost:27017/timetable-express-app')
 const User = mongoose.Schema({
   email: {
     type: String,
