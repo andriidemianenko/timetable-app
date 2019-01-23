@@ -1,12 +1,15 @@
-const userData = (state = {}, action) => {
+const initialState = {
+  email: '',
+  userId: '',
+  isAuthorized: false
+}
+const userData = (state = initialState, action) => {
   switch(action.type) {
-    case 'SET_USER_ID':
-      return Object.assign({}, state, {
-        userId: action.id
-      })
-    case 'SET_USER_EMAIL': 
-      return Object.assign({}, state, {
-        email: action.email
+    case 'FETCH_USER_DATA':
+      return Object.assign({}, state.userData, {
+        userId: action.payload.userId,
+        email: action.payload.email,
+        isAuthorized: action.payload.isAuthorized
       })
     default: 
       return state

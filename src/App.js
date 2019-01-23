@@ -7,8 +7,6 @@ import Editor from './components/Editor.js'
 
 import './App.css';
 
-let userId = localStorage.getItem('_id')
-
 class App extends Component {
   render() {
     return (
