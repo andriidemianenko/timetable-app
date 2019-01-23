@@ -48,7 +48,7 @@ router.post('/signin', async (req, res) => {
         },
         secret,
         {
-          expiresIn: '3m'
+          expiresIn: '1m'
         })
         return res.status(200).json({
           success: 'Welcome to the JWT Auth',
