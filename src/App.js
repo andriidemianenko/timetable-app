@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom';
 import Login from './components/Login.js';
 import Timetable from './components/Timetable.js';
 import Registration from './components/Registration.js';
+import Editor from './components/Editor.js'
 
 import './App.css';
+
+let userId = localStorage.getItem('_id')
 
 class App extends Component {
   render() {
@@ -14,11 +17,13 @@ class App extends Component {
           <ul>
             <li><Link to="/">Login</Link></li>
             <li><Link to="/registration">Registration</Link></li>
-            <li><Link to="/timetable">Timetable</Link></li>
           </ul>
-          <Route path="/" exact component={Login} />
-          <Route path="/registration" component={Registration} />
-          <Route path="/timetable" component={Timetable} />
+          <Switch>
+            <Route path="/" exact component={Login} />
+            <Route path="/registration" component={Registration} />
+            <Route path="/timetable/user/:userId" component={Timetable} />
+            <Route path="/editor/user/:userId" component={Editor} />
+          </Switch>
         </div>
       </Router> 
     )

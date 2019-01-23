@@ -4,6 +4,8 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 
 const User = require('../models/User');
+const Timetable = require('../models/Timetable')
+
 const salt = 'someSaltString'
 const secret = 'secret'
 
@@ -46,7 +48,7 @@ router.post('/signin', async (req, res) => {
         },
         secret,
         {
-          expiresIn: '3m'
+          expiresIn: '1m'
         })
         return res.status(200).json({
           success: 'Welcome to the JWT Auth',

@@ -1,16 +1,26 @@
 import React, { Component } from 'react';
 import axios from 'axios'
+import { BrowserRouter, Link, Route } from 'react-router-dom'
+import Editor from './Editor.js'
 
 export default class Timetable extends Component {
   constructor() {
     super();
     this.state = {
       message: 'Timetable',
-      status: ''
+      status: '',
+      isAuthorized: false
     }
   }
   getUserId() { return localStorage.getItem('_id')}
   getToken() { return localStorage.getItem('auth_token') }
+  checkAuthorization() {
+    if (this.state.isAuthorized) {
+      return (
+        <h1>Here you can see your table!</h1>
+      )
+    }
+  }
   fetchTable() {
     axios({
       url: 'http://localhost:5000/api/auth',
@@ -21,7 +31,7 @@ export default class Timetable extends Component {
       }
     })
     .then(res => {
-      this.setState({ status: res.data.status })
+      this.setState({ status: res.data.status, isAuthorized: true })
       axios({
         url: `http://localhost:5000/api/timetable/user/${this.getUserId()}`,
         method: 'GET'
@@ -29,14 +39,19 @@ export default class Timetable extends Component {
       .then(res => this.setState({ message: res.data }))
     })
     .catch(err => {
-      this.setState({ status: 'Your token is expired!' })
+      this.setState({ status: 'Your token is expired!', isAuthorized: false})
+      this.props.history.push('/')
     })
   }
   render() {
     return (
       <div>
-        <h1>{this.state.status}</h1>
-        <h2>{this.state.message}</h2>
+        {
+          this.checkAuthorization()
+        }
+        <ul>
+          <Link to={`/editor/user/${this.getUserId()}`}>Editor</Link>
+        </ul>
       </div>
     );
   }
