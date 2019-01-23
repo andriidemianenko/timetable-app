@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { BrowserRouter as Link } from 'react-router-dom'
+import Event from './Event.js'
 
 export default class Editor extends Component {
   constructor() {
@@ -31,8 +31,9 @@ export default class Editor extends Component {
     return (
       <div>
         <ul>
-          <li>Event 1</li>
-          <li>Event 1</li>
+          {
+            
+          }
         </ul>
       </div>
     )
