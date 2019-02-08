@@ -3,8 +3,7 @@ const router = express.Router()
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 
-const User = require('../models/User');
-const Timetable = require('../models/Timetable')
+const User = require('../models/User')
 
 const salt = 'someSaltString'
 const secret = 'secret'
@@ -21,8 +20,31 @@ router.get('/', (req, res) => {
 })
 
 router.get('/timetable/user/:userId', (req, res) => {
-  console.log(req.params.userId)
-  res.send(`Welcome user ${req.params.userId}!`)
+  res.json({
+    message: `Welcome user ${req.params.userId}!`,
+    events: [
+      {
+        startedAt: 15,
+        duration: 30,
+        title: 'Some event#1'
+      },
+      {
+        startedAt: 15,
+        duration: 30,
+        title: 'Some event#2'
+      },
+      {
+        startedAt: 15,
+        duration: 30,
+        title: 'Some event#3'
+      },
+      {
+        startedAt: 15,
+        duration: 30,
+        title: 'Some event#4'
+      }
+    ]
+  })
 })
 
 router.post('/signup', async (req, res) => {
@@ -69,6 +91,8 @@ router.post('/signin', async (req, res) => {
 
 router.post('/auth', async (req, res) => {
   const token = req.body.token
+  const decoded = jwt.decode(token)
+  console.log(decoded)
   if (!token) {
     res.status(401).json({
       status: 'You are not logged in!'
@@ -77,11 +101,15 @@ router.post('/auth', async (req, res) => {
     try {
       await jwt.verify(token, secret)
       res.status(200).json({
-        status: 'You are authorized!'
+        email: decoded.email,
+        userId: decoded._id,
+        isAuthorized: true
       })
     } catch(error) {
       res.status(401).json({
-        status: 'Invalid auth token!'
+        email: '',
+        userId: '',
+        isAuthorized: false
       })
     }
   }

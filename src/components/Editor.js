@@ -1,43 +1,36 @@
 import React, { Component } from 'react'
-import axios from 'axios'
-import { BrowserRouter as Link } from 'react-router-dom'
+import Event from './Event.js'
+import { connect } from 'react-redux'
+import { deleteEvent, fetchUserData } from '../storage/actions'
 
-export default class Editor extends Component {
-  constructor() {
-    super()
-    this.state = {
-      events: []
-    }
-  }
+class Editor extends Component {
   getUserId() { return localStorage.getItem('_id') }
   getToken() { return localStorage.getItem('auth_token')}
-  fetchEditor() {
-    axios({
-      url: 'http://localhost:5000/api/auth',
-      method: 'POST',
-      data: { token: this.getToken() },
-      headers: {
-        'Content-type': 'application/json'
-      }
-    })
-    .then(res => {
-      console.log(res)
-    })
-    .catch(err => {
-      this.props.history.push('/')
-    })
-  }
   render() {
     return (
       <div>
         <ul>
-          <li>Event 1</li>
-          <li>Event 1</li>
+          {
+            this.props.state.events.map((event, index) => (
+              <Event key={index} {...event} onClick={() => {}} />
+            ))
+          }
         </ul>
       </div>
     )
   }
   componentDidMount() {
-    this.fetchEditor()
+    this.props.fetchUserData(this.getToken())
+      .then(() => {
+        if (this.props.state.user.isAuthorized === false) {
+          this.props.history.push('/')
+        }
+      })
+    console.log(this.props, 'props')
   }
 }
+const mapStateToProps = state => ({
+  state: state
+})
+
+export default connect(mapStateToProps, { deleteEvent, fetchUserData })(Editor)
