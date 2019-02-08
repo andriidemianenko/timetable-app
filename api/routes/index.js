@@ -4,6 +4,7 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 
 const User = require('../models/User')
+const Events = require('../models/Events')
 
 const salt = 'someSaltString'
 const secret = 'secret'
@@ -19,31 +20,24 @@ router.get('/', (req, res) => {
   res.send('Welcome on a homepage')
 })
 
-router.get('/timetable/user/:userId', (req, res) => {
+router.post('/timetable/user/:userId', async (req, res) => {
+  const id = req.params.userId
+  const event = new Events({
+    userId: id,
+    startedAt: req.body.startedAt,
+    duration: req.body.duration, 
+    title: req.body.title
+  })
+  await event.save()
+  res.status(200).end()
+})
+
+router.get('/timetable/user/:userId', async (req, res) => {
+  const userEvents = await Events.find({ userId: req.params.userId })
+  console.log(req.params.userId, 'events')
   res.json({
     message: `Welcome user ${req.params.userId}!`,
-    events: [
-      {
-        startedAt: 15,
-        duration: 30,
-        title: 'Some event#1'
-      },
-      {
-        startedAt: 15,
-        duration: 30,
-        title: 'Some event#2'
-      },
-      {
-        startedAt: 15,
-        duration: 30,
-        title: 'Some event#3'
-      },
-      {
-        startedAt: 15,
-        duration: 30,
-        title: 'Some event#4'
-      }
-    ]
+    events: userEvents
   })
 })
 
@@ -70,7 +64,7 @@ router.post('/signin', async (req, res) => {
         },
         secret,
         {
-          expiresIn: '1m'
+          expiresIn: '4m'
         })
         return res.status(200).json({
           success: 'Welcome to the JWT Auth',
@@ -92,7 +86,6 @@ router.post('/signin', async (req, res) => {
 router.post('/auth', async (req, res) => {
   const token = req.body.token
   const decoded = jwt.decode(token)
-  console.log(decoded)
   if (!token) {
     res.status(401).json({
       status: 'You are not logged in!'
