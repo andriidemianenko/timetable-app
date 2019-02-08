@@ -1,17 +1,15 @@
 const events = (state = [], action) => {
   switch(action.type) {
-    case 'SET_EVENTS':
-      return Object.assign({}, state, {
-        events: action.events
-      })
+    case 'FETCH_EVENTS':
+      return action.payload
     case 'ADD_EVENT':
       return Object.assign({}, state, {
         events: [
           ...state.events,
           {
-            startedAt: action.startedAt,
-            duration: action.duration,
-            title: action.title
+            startedAt: action.payload.startedAt,
+            duration: action.payload.duration,
+            title: action.payload.title
           }
         ]
       })

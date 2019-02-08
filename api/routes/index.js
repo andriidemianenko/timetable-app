@@ -3,8 +3,7 @@ const router = express.Router()
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 
-const User = require('../models/User');
-const Timetable = require('../models/Timetable')
+const User = require('../models/User')
 
 const salt = 'someSaltString'
 const secret = 'secret'
@@ -21,8 +20,31 @@ router.get('/', (req, res) => {
 })
 
 router.get('/timetable/user/:userId', (req, res) => {
-  console.log(req.params.userId)
-  res.send(`Welcome user ${req.params.userId}!`)
+  res.json({
+    message: `Welcome user ${req.params.userId}!`,
+    events: [
+      {
+        startedAt: 15,
+        duration: 30,
+        title: 'Some event#1'
+      },
+      {
+        startedAt: 15,
+        duration: 30,
+        title: 'Some event#2'
+      },
+      {
+        startedAt: 15,
+        duration: 30,
+        title: 'Some event#3'
+      },
+      {
+        startedAt: 15,
+        duration: 30,
+        title: 'Some event#4'
+      }
+    ]
+  })
 })
 
 router.post('/signup', async (req, res) => {

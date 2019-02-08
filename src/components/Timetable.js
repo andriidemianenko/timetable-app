@@ -4,14 +4,6 @@ import { connect } from 'react-redux'
 import { fetchUserData } from '../storage/actions/index'
 
 class Timetable extends Component {
-  constructor() {
-    super();
-    this.state = {
-      message: 'Timetable',
-      status: '',
-      isAuthorized: false
-    }
-  }
   getUserId() { return localStorage.getItem('_id')}
   getToken() { return localStorage.getItem('auth_token') }
   checkAuthorization() {

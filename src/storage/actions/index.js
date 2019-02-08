@@ -22,7 +22,13 @@ export const fetchUserData = (token) => dispatch => {
       url: `http://localhost:5000/api/timetable/user/${res.data.userId}`,
       method: 'GET'
     })
-    .then(res => console.log(res, 'res'))
+    .then(res => {
+      console.log(res.data.events, 'fetch events')
+      dispatch({
+        type: 'FETCH_EVENTS',
+        payload: res.data.events
+      })
+    })
   })
   .catch((err) => {
     dispatch(fetchUser(err.response.data))
