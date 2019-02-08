@@ -1,7 +1,14 @@
 import axios from 'axios'
 
+function fetchUser(payload) {
+  return {
+    type: 'FETCH_USER_DATA',
+    payload
+  }
+}
+
 export const fetchUserData = (token) => dispatch => {
-  axios({
+  return axios({
     url: 'http://localhost:5000/api/auth',
     method: 'POST',
     data: { token },
@@ -10,16 +17,15 @@ export const fetchUserData = (token) => dispatch => {
     }
   })
   .then(res => {
-    dispatch({
-      type: 'FETCH_USER_DATA',
-      payload: res.data
-    })
-    console.log('fetched!')
+    dispatch(fetchUser(res.data))
     axios({
       url: `http://localhost:5000/api/timetable/user/${res.data.userId}`,
       method: 'GET'
     })
-    .then(res => console.log(res))
+    .then(res => console.log(res, 'res'))
+  })
+  .catch((err) => {
+    dispatch(fetchUser(err.response.data))
   })
 }
 export const setEvents = events => ({
