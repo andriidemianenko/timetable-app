@@ -3,18 +3,12 @@ const events = (state = [], action) => {
     case 'FETCH_EVENTS':
       return action.payload
     case 'ADD_EVENT':
-      return Object.assign({}, state, {
-        events: [
-          ...state.events,
-          {
-            startedAt: action.payload.startedAt,
-            duration: action.payload.duration,
-            title: action.payload.title
-          }
-        ]
-      })
+      return [
+        ...state,
+        action.payload
+      ]
     case 'DELETE_EVENT':
-      return state.filter((event, index, events) => events[index] !== action.index)
+      return state.filter(event => event._id !== action.payload)
     default: 
       return state
   }

@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import Event from './Event.js'
-import axios from 'axios'
 import { connect } from 'react-redux'
-import { deleteEvent, fetchUserData } from '../storage/actions'
+import { deleteEvent, fetchUserData, addEvent } from '../storage/actions'
 
 class Editor extends Component {
   constructor() {
@@ -26,27 +25,10 @@ class Editor extends Component {
   }
   addEvent() {
     const eventData = JSON.stringify(this.state)
-    axios({
-      url: `http://localhost:5000/api/timetable/user/${this.getUserId()}`,
-      method: 'POST',
-      data: eventData,
-      headers: {
-        'Content-type': 'application/json'
-      }
-    })
-    .then(res => {
-      console.log(res)
-    })
-    .catch(err => {})
+    this.props.addEvent(eventData, this.getUserId())
   }
-  fetchEvents() {
-    axios({
-      url: `http://localhost:5000/api/timetable/user/${this.getUserId()}`,
-      method: 'GET'
-    })
-    .then(res => {
-      console.log(res, 'response EVENTS')
-    })
+  deleteEvent(id, userId) {
+    this.props.deleteEvent(id, userId)
   }
   render() {
     return (
@@ -60,10 +42,10 @@ class Editor extends Component {
           <input type="text" id="title" value={this.state.title} onChange={this.handleChange} required/>
           <button type="submit">Add</button>
         </form>
-        <ul>
+        <ul style={editorStyle}>
           {
             this.props.state.events.map((event, index) => (
-              <Event key={index} {...event} onClick={() => {}} />
+              <Event key={event._id} {...event} delete={() => this.deleteEvent(event._id, event.userId)}/>
             ))
           }
         </ul>
@@ -77,11 +59,16 @@ class Editor extends Component {
           this.props.history.push('/')
         }
       })
-    // this.fetchEvents()
   }
 }
 const mapStateToProps = state => ({
   state: state
 })
 
-export default connect(mapStateToProps, { deleteEvent, fetchUserData })(Editor)
+const editorStyle = {
+  width: 'auto',
+  margin: '20px',
+  listStyleType: 'none'
+}
+
+export default connect(mapStateToProps, { deleteEvent, fetchUserData, addEvent })(Editor)

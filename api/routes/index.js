@@ -29,6 +29,12 @@ router.post('/timetable/user/:userId', async (req, res) => {
     title: req.body.title
   })
   await event.save()
+  res.status(200).json(event)
+})
+
+router.delete('/timetable/user/:userId', async (req, res) => {
+  console.log(req.body)
+  await Events.deleteOne({ _id : req.body.id })
   res.status(200).end()
 })
 

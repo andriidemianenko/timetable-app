@@ -1,18 +1,34 @@
-import React from 'react'
+import React, { Component } from 'react'
 
 const deleteButton = {
   float: 'right',
   color: 'red'
 }
-const Event = ({ onClick, startedAt, duration, title }) => (
-  <li>
-    <div>
-      <p>Strated At: {startedAt}</p>
-      <p>duration: {duration}</p>
-      <p>title: {title}</p>
-      <span style={deleteButton}>Delete</span>
-    </div>
-  </li>
-)
+const eventStyle = {
+  border: '1px solid #000',
+  padding: '5px',
+  margin: '3px'
+}
+const eventParams = {
+  margin: '3px'
+}
+
+class Event extends Component {
+  render() {
+    return (
+      <li>
+        <div style={eventStyle}>
+          <span style={eventParams}>Strated At: {this.props.startedAt}</span>
+          <span style={eventParams}>duration: {this.props.duration}</span>
+          <span style={eventParams}>title: {this.props.title}</span>
+          <span style={deleteButton} onClick={this.props.delete}>Delete</span>
+        </div>
+      </li>
+    )
+  }
+  componentDidMount() {
+    console.log(this.props, 'props')
+  }
+}
 
 export default Event
