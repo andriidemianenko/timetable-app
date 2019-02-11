@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Event from './Event.js'
 import { connect } from 'react-redux'
-import { deleteEvent, fetchUserData, addEvent } from '../storage/actions'
+import { deleteEvent, fetchUserData, addEvent, uploadEvents } from '../storage/actions'
 
 class Editor extends Component {
   constructor() {
@@ -9,7 +9,8 @@ class Editor extends Component {
     this.state = {
       startedAt: 0,
       duration: 0,
-      title: ''
+      title: '',
+      selectedFile: null
     }
   }
   getUserId() { return localStorage.getItem('_id') }
@@ -22,6 +23,15 @@ class Editor extends Component {
   handleSubmit = event => {
     event.preventDefault()
     this.addEvent()
+  }
+  handleSelectedFile = event => {
+    this.setState({
+      selectedFile: event.target.files[0],
+      loaded: 0
+    })
+  }
+  upload = () => {
+    this.props.uploadEvents(this.state.selectedFile, this.getUserId())
   }
   addEvent() {
     const eventData = JSON.stringify(this.state)
@@ -42,6 +52,10 @@ class Editor extends Component {
           <input type="text" id="title" value={this.state.title} onChange={this.handleChange} required/>
           <button type="submit">Add</button>
         </form>
+        <div id="fileUpload">
+          <input type="file" name="timetable" onChange={this.handleSelectedFile} />
+          <button onClick={this.upload}>Upload</button>
+        </div>
         <ul style={editorStyle}>
           {
             this.props.state.events.map((event, index) => (
@@ -71,4 +85,4 @@ const editorStyle = {
   listStyleType: 'none'
 }
 
-export default connect(mapStateToProps, { deleteEvent, fetchUserData, addEvent })(Editor)
+export default connect(mapStateToProps, { deleteEvent, fetchUserData, addEvent, uploadEvents })(Editor)

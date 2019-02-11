@@ -23,7 +23,6 @@ export const fetchUserData = (token) => dispatch => {
       method: 'GET'
     })
     .then(res => {
-      console.log(res.data.events, 'fetch events')
       dispatch({
         type: 'FETCH_EVENTS',
         payload: res.data.events
@@ -54,7 +53,6 @@ export const addEvent = (event, userId) => dispatch => {
   .catch(err => {})
 }
 export const deleteEvent = (id, userId) => dispatch => {
-  console.log(id, 'id')
   return axios({
     url: `http://localhost:5000/api/timetable/user/${userId}`,
     method: 'DELETE',
@@ -70,4 +68,19 @@ export const deleteEvent = (id, userId) => dispatch => {
     })
   })
   .catch(err => {})
+}
+export const uploadEvents = (selectedFile, userId) => dispatch => {
+  const formData = new FormData()
+  formData.append('file', selectedFile, selectedFile.name)
+  return axios({
+    url: `http://localhost:5000/api/timetable/user/${userId}/upload`,
+    method: 'POST',
+    data: formData
+  })
+  .then(res => {
+    dispatch({
+      type: 'FETCH_EVENTS',
+      payload: res.data.events
+    })
+  })
 }

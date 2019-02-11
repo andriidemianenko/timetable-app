@@ -32,16 +32,30 @@ router.post('/timetable/user/:userId', async (req, res) => {
   res.status(200).json(event)
 })
 
+router.post('/timetable/user/:userId/upload', async (req, res) => {
+  const fileData = req.files.file.data.toString('utf-8')
+  const timetable = JSON.parse(fileData)
+  for (let i = 0; i < timetable.events.length; i++) {
+    const event = new Events({
+      userId: req.params.userId,
+      startedAt: timetable.events[i].startedAt,
+      duration: timetable.events[i].duration,
+      title: timetable.events[i].title
+    })
+    await event.save()
+  }
+  const events = await Events.find({ userId: req.params.userId })
+  res.status(200).json({ events }).end()
+})
+
 router.delete('/timetable/user/:userId', async (req, res) => {
-  console.log(req.body)
   await Events.deleteOne({ _id : req.body.id })
   res.status(200).end()
 })
 
 router.get('/timetable/user/:userId', async (req, res) => {
   const userEvents = await Events.find({ userId: req.params.userId })
-  console.log(req.params.userId, 'events')
-  res.json({
+  res.status(200).json({
     message: `Welcome user ${req.params.userId}!`,
     events: userEvents
   })

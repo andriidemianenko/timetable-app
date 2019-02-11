@@ -2,12 +2,14 @@ const express = require('express')
 const routes = require('./api/routes/index')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const fileUpload = require('express-fileupload')
 
 const app = express()
 
 const PORT = 5000
 
 app.use(cors())
+app.use(fileUpload())
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use('/api', routes)

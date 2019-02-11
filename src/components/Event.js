@@ -26,9 +26,6 @@ class Event extends Component {
       </li>
     )
   }
-  componentDidMount() {
-    console.log(this.props, 'props')
-  }
 }
 
 export default Event
