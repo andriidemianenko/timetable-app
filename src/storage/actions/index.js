@@ -44,7 +44,6 @@ export const addEvent = (event, userId) => dispatch => {
     }
   })
   .then(res => {
-    console.log(res.data, 'wtf')
     dispatch({
       type: 'ADD_EVENT',
       payload: res.data
