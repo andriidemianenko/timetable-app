@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Event from './Event.js'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { deleteEvent, fetchUserData, addEvent, uploadEvents } from '../storage/actions'
 
 class Editor extends Component {
@@ -43,10 +44,13 @@ class Editor extends Component {
   render() {
     return (
       <div>
+        <ul>
+          <Link to={`/timetable/user/${this.getUserId()}`}>Timetable</Link>
+        </ul>
         <form onSubmit={this.handleSubmit}>
           <label>Started At:</label>
           <input type="number" id="startedAt" value={this.state.startedAt} onChange={this.handleChange} required/>
-          <label>Password:</label>
+          <label>Duration:</label>
           <input type="number" id="duration" value={this.state.duration} onChange={this.handleChange} required/>
           <label>Title:</label>
           <input type="text" id="title" value={this.state.title} onChange={this.handleChange} required/>
@@ -69,6 +73,7 @@ class Editor extends Component {
   componentDidMount() {
     this.props.fetchUserData(this.getToken())
       .then(() => {
+        console.log(this.props.state, 'state editor')
         if (this.props.state.user.isAuthorized === false) {
           this.props.history.push('/')
         }
